@@ -1,6 +1,6 @@
 # SPEC 01 — MVP Arkanoid jugable
 
-> **Estado:** Draft · **Depende de:** ninguna · **Fecha:** 2026-06-23
+> **Estado:** approved · **Depende de:** ninguna · **Fecha:** 2026-06-23
 > **Objetivo:** Implementar un juego de Arkanoid de nivel único y jugable en un canvas de 800×600 px, con paleta controlada por ratón y teclado, bola con física de rebote simple, cuadrícula de 10×6 bloques, 3 vidas, puntuación de 10 pts por bloque, y overlays de victoria/game over.
 
 ---
