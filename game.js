@@ -74,6 +74,11 @@ canvas.addEventListener('mousemove', (e) => {
 document.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowLeft')  keys.left  = true;
   if (e.key === 'ArrowRight') keys.right = true;
+  if (e.key === 'r' || e.key === 'R') restart();
+});
+
+canvas.addEventListener('click', () => {
+  if (state.status !== 'playing') restart();
 });
 
 document.addEventListener('keyup', (e) => {
@@ -194,6 +199,23 @@ function draw() {
   ctx.fillText('Puntos: ' + state.score, 16, 28);
   ctx.textAlign = 'right';
   ctx.fillText('Vidas: ' + state.lives, W - 16, 28);
+}
+
+function restart() {
+  if (state.status === 'playing') return;
+
+  blocks = createBlocks();
+
+  state.lives = 3;
+  state.score = 0;
+  state.status = 'playing';
+
+  ball.x = W / 2;
+  ball.y = H / 2;
+  ball.vx = BALL_SPEED;
+  ball.vy = -BALL_SPEED;
+
+  paddle.x = W / 2 - paddle.width / 2;
 }
 
 function drawOverlay() {
