@@ -54,6 +54,33 @@ function update() {
 
   ball.x += ball.vx;
   ball.y += ball.vy;
+
+  // paredes laterales
+  if (ball.x - ball.radius < 0) {
+    ball.x = ball.radius;
+    ball.vx = Math.abs(ball.vx);
+  } else if (ball.x + ball.radius > W) {
+    ball.x = W - ball.radius;
+    ball.vx = -Math.abs(ball.vx);
+  }
+
+  // techo
+  if (ball.y - ball.radius < 0) {
+    ball.y = ball.radius;
+    ball.vy = Math.abs(ball.vy);
+  }
+
+  // paleta
+  if (
+    ball.vy > 0 &&
+    ball.y + ball.radius >= paddle.y &&
+    ball.y + ball.radius <= paddle.y + paddle.height &&
+    ball.x >= paddle.x &&
+    ball.x <= paddle.x + paddle.width
+  ) {
+    ball.y = paddle.y - ball.radius;
+    ball.vy = -Math.abs(ball.vy);
+  }
 }
 
 function draw() {
