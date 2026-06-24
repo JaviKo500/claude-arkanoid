@@ -89,6 +89,15 @@ function update() {
   ball.x += ball.vx;
   ball.y += ball.vy;
 
+  // bola sale por el borde inferior
+  if (ball.y - ball.radius > H) {
+    state.lives -= 1;
+    ball.x = W / 2;
+    ball.y = H / 2;
+    ball.vx = BALL_SPEED;
+    ball.vy = -BALL_SPEED;
+  }
+
   // paredes laterales
   if (ball.x - ball.radius < 0) {
     ball.x = ball.radius;
