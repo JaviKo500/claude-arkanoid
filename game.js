@@ -82,6 +82,8 @@ document.addEventListener('keyup', (e) => {
 });
 
 function update() {
+  if (state.status !== 'playing') return;
+
   if (keys.left)  paddle.x -= paddle.speed;
   if (keys.right) paddle.x += paddle.speed;
   paddle.x = Math.max(0, Math.min(W - paddle.width, paddle.x));
@@ -150,6 +152,16 @@ function update() {
     }
   }
 
+  // condiciones de fin
+  if (state.lives === 0) {
+    state.status = 'gameover';
+    return;
+  }
+  if (blocks.every(b => !b.alive)) {
+    state.status = 'win';
+    return;
+  }
+
   // paleta
   if (
     ball.vy > 0 &&
@@ -172,12 +184,36 @@ function draw() {
     if (b.alive) drawSprite(ctx, 'block_' + b.color, b.x, b.y, b.width, b.height);
   }
 
+  if (state.status !== 'playing') {
+    drawOverlay();
+  }
+
   ctx.font = 'bold 18px monospace';
   ctx.fillStyle = '#fff';
   ctx.textAlign = 'left';
   ctx.fillText('Puntos: ' + state.score, 16, 28);
   ctx.textAlign = 'right';
   ctx.fillText('Vidas: ' + state.lives, W - 16, 28);
+}
+
+function drawOverlay() {
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
+  ctx.fillRect(0, 0, W, H);
+
+  const isWin = state.status === 'win';
+  ctx.textAlign = 'center';
+
+  ctx.font = 'bold 48px monospace';
+  ctx.fillStyle = isWin ? '#ffe066' : '#ff4444';
+  ctx.fillText(isWin ? '¡GANASTE!' : 'GAME OVER', W / 2, H / 2 - 60);
+
+  ctx.font = 'bold 28px monospace';
+  ctx.fillStyle = '#fff';
+  ctx.fillText('Puntuación final: ' + state.score, W / 2, H / 2);
+
+  ctx.font = 'bold 20px monospace';
+  ctx.fillStyle = '#aaa';
+  ctx.fillText('Pulsa R o haz click para reiniciar', W / 2, H / 2 + 60);
 }
 
 function loop() {
