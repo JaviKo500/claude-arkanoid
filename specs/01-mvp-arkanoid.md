@@ -87,20 +87,20 @@ Convenciones: origen de coordenadas en esquina superior izquierda; velocidades e
 
 ## Acceptance criteria
 
-- [ ] Abrir `index.html` en el navegador muestra un canvas de 800×600 px con la bola ya en movimiento.
-- [ ] La paleta se mueve con el ratón (posición X del cursor sobre el canvas).
-- [ ] La paleta se mueve con las flechas izquierda/derecha del teclado.
-- [ ] Ambos controles funcionan simultáneamente sin interferirse.
-- [ ] La paleta no sale de los bordes del canvas.
-- [ ] La bola rebota en las paredes laterales y el techo sin atravesarlos.
-- [ ] La bola rebota en la paleta.
-- [ ] Se muestran 10 columnas × 6 filas de bloques al iniciar la partida.
-- [ ] Al golpear un bloque, este desaparece y el marcador suma 10 puntos.
-- [ ] El marcador de puntuación y el contador de vidas son visibles en todo momento durante la partida.
-- [ ] Cuando la bola sale por el borde inferior, las vidas se reducen en 1 y la bola reaparece en movimiento.
-- [ ] Al llegar a 0 vidas aparece el overlay de game over con el puntaje final.
-- [ ] Al destruir todos los bloques aparece el overlay de victoria con el puntaje final.
-- [ ] Desde cualquier overlay, presionar R o hacer click en el botón reinicia la partida completa.
+- [ x ] Abrir `index.html` en el navegador muestra un canvas de 800×600 px con la bola ya en movimiento.
+- [ x ] La paleta se mueve con el ratón (posición X del cursor sobre el canvas).
+- [ x ] La paleta se mueve con las flechas izquierda/derecha del teclado.
+- [ x ] Ambos controles funcionan simultáneamente sin interferirse.
+- [ x ] La paleta no sale de los bordes del canvas.
+- [ x ] La bola rebota en las paredes laterales y el techo sin atravesarlos.
+- [ x ] La bola rebota en la paleta.
+- [ x ] Se muestran 10 columnas × 6 filas de bloques al iniciar la partida.
+- [ x ] Al golpear un bloque, este desaparece y el marcador suma 10 puntos.
+- [ x ] El marcador de puntuación y el contador de vidas son visibles en todo momento durante la partida.
+- [ x ] Cuando la bola sale por el borde inferior, las vidas se reducen en 1 y la bola reaparece en movimiento.
+- [ x ] Al llegar a 0 vidas aparece el overlay de game over con el puntaje final.
+- [ x ] Al destruir todos los bloques aparece el overlay de victoria con el puntaje final.
+- [ x ] Desde cualquier overlay, presionar R o hacer click en el botón reinicia la partida completa.
 
 ---
 
