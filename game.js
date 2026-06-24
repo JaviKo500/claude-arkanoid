@@ -14,7 +14,7 @@ const BLOCKS_OFFSET_Y = 60;
 const BLOCK_COLORS = ['red', 'cyan', 'green', 'magenta', 'yellow', 'hotpink'];
 
 const BALL_RADIUS = 8;
-const BALL_SPEED = 4;
+const BALL_SPEED = 2.5;
 
 const PADDLE_W = 100;
 const PADDLE_H = 14;
