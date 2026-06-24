@@ -48,6 +48,12 @@ function createBlocks() {
 
 let blocks = createBlocks();
 
+const state = {
+  lives: 3,
+  score: 0,
+  status: 'playing',
+};
+
 const ball = {
   x: W / 2,
   y: H / 2,
@@ -98,6 +104,43 @@ function update() {
     ball.vy = Math.abs(ball.vy);
   }
 
+  // bloques
+  for (const b of blocks) {
+    if (!b.alive) continue;
+
+    const bLeft   = b.x;
+    const bRight  = b.x + b.width;
+    const bTop    = b.y;
+    const bBottom = b.y + b.height;
+
+    if (
+      ball.x + ball.radius > bLeft &&
+      ball.x - ball.radius < bRight &&
+      ball.y + ball.radius > bTop &&
+      ball.y - ball.radius < bBottom
+    ) {
+      b.alive = false;
+      state.score += 10;
+
+      // determinar lado de impacto por solapamiento mínimo
+      const overlapLeft   = (ball.x + ball.radius) - bLeft;
+      const overlapRight  = bRight - (ball.x - ball.radius);
+      const overlapTop    = (ball.y + ball.radius) - bTop;
+      const overlapBottom = bBottom - (ball.y - ball.radius);
+
+      const minH = Math.min(overlapLeft, overlapRight);
+      const minV = Math.min(overlapTop, overlapBottom);
+
+      if (minH < minV) {
+        ball.vx = -ball.vx;
+      } else {
+        ball.vy = -ball.vy;
+      }
+
+      break; // un bloque por frame para evitar doble inversión
+    }
+  }
+
   // paleta
   if (
     ball.vy > 0 &&
@@ -119,6 +162,13 @@ function draw() {
   for (const b of blocks) {
     if (b.alive) drawSprite(ctx, 'block_' + b.color, b.x, b.y, b.width, b.height);
   }
+
+  ctx.font = 'bold 18px monospace';
+  ctx.fillStyle = '#fff';
+  ctx.textAlign = 'left';
+  ctx.fillText('Puntos: ' + state.score, 16, 28);
+  ctx.textAlign = 'right';
+  ctx.fillText('Vidas: ' + state.lives, W - 16, 28);
 }
 
 function loop() {
