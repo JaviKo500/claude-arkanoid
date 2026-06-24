@@ -197,8 +197,12 @@ function draw() {
   ctx.fillStyle = '#fff';
   ctx.textAlign = 'left';
   ctx.fillText('Puntos: ' + state.score, 16, 28);
-  ctx.textAlign = 'right';
-  ctx.fillText('Vidas: ' + state.lives, W - 16, 28);
+  const ballSize = 18;
+  const ballSpacing = 4;
+  for (let i = 0; i < state.lives; i++) {
+    const bx = W - 16 - (state.lives - i) * (ballSize + ballSpacing);
+    drawSprite(ctx, 'ball', bx, 10, ballSize, ballSize);
+  }
 }
 
 function restart() {
