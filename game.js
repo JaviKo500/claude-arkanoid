@@ -64,6 +64,14 @@ const ball = {
 
 const keys = { left: false, right: false };
 
+const breakSound = new Audio('assets/sounds/break-sound.mp3');
+const bounceSound = new Audio('assets/sounds/ball-bounce.mp3');
+
+function playSound(sound) {
+  sound.currentTime = 0;
+  sound.play().catch(() => {}); // ignora bloqueo de autoplay
+}
+
 canvas.addEventListener('mousemove', (e) => {
   const rect = canvas.getBoundingClientRect();
   const mouseX = e.clientX - rect.left;
@@ -109,15 +117,18 @@ function update() {
   if (ball.x - ball.radius < 0) {
     ball.x = ball.radius;
     ball.vx = Math.abs(ball.vx);
+    playSound(bounceSound);
   } else if (ball.x + ball.radius > W) {
     ball.x = W - ball.radius;
     ball.vx = -Math.abs(ball.vx);
+    playSound(bounceSound);
   }
 
   // techo
   if (ball.y - ball.radius < 0) {
     ball.y = ball.radius;
     ball.vy = Math.abs(ball.vy);
+    playSound(bounceSound);
   }
 
   // bloques
@@ -137,6 +148,7 @@ function update() {
     ) {
       b.alive = false;
       state.score += 10;
+      playSound(breakSound);
 
       // determinar lado de impacto por solapamiento mínimo
       const overlapLeft   = (ball.x + ball.radius) - bLeft;
@@ -177,6 +189,7 @@ function update() {
   ) {
     ball.y = paddle.y - ball.radius;
     ball.vy = -Math.abs(ball.vy);
+    playSound(bounceSound);
   }
 }
 
