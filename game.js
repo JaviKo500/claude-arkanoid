@@ -46,9 +46,47 @@ const LEVELS = [
       'AAAAAAAAAA',
     ],
   },
+  {
+    speed: { vx: 3.5, vy: -3.5 },
+    pattern: [
+      'RR......RR',
+      '.CC....CC.',
+      '..GG..GG..',
+      '...MMMM...',
+      '..YY..YY..',
+      '.HH....HH.',
+    ],
+  },
+  {
+    speed: { vx: 4.0, vy: -4.0 },
+    pattern: [
+      'RR........',
+      'CCRR......',
+      '.CCGG.....',
+      '..GGMM....',
+      '...MMYY...',
+      '....YYHH..',
+      '.....HHAA.',
+      '......AAAA',
+      'AAAAAAAAAA',
+    ],
+  },
 ];
 
 const COLOR_MAP = { R: 'red', C: 'cyan', G: 'green', M: 'magenta', Y: 'yellow', H: 'hotpink', A: 'gray' };
+
+const LEVEL_BUTTON_SIZE = 100;
+const LEVEL_BUTTON_GAP = 20;
+const LEVEL_BUTTONS_OFFSET_X = (W - (LEVELS.length * LEVEL_BUTTON_SIZE + (LEVELS.length - 1) * LEVEL_BUTTON_GAP)) / 2;
+const LEVEL_BUTTONS_Y = H / 2 - LEVEL_BUTTON_SIZE / 2;
+
+const LEVEL_BUTTONS = LEVELS.map((_, i) => ({
+  index: i,
+  x: LEVEL_BUTTONS_OFFSET_X + i * (LEVEL_BUTTON_SIZE + LEVEL_BUTTON_GAP),
+  y: LEVEL_BUTTONS_Y,
+  width: LEVEL_BUTTON_SIZE,
+  height: LEVEL_BUTTON_SIZE,
+}));
 
 const PADDLE_W = 100;
 const PADDLE_H = 14;
@@ -87,7 +125,7 @@ let blocks = createBlocksFromPattern(LEVELS[0].pattern);
 const state = {
   lives: 3,
   score: 0,
-  status: 'playing',
+  status: 'menu',
   level: 1,
   transitionFramesLeft: 0,
 };
@@ -123,8 +161,25 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'r' || e.key === 'R') restart();
 });
 
-canvas.addEventListener('click', () => {
-  if (state.status !== 'playing') restart();
+canvas.addEventListener('click', (e) => {
+  if (state.status === 'menu') {
+    const rect = canvas.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const clickY = e.clientY - rect.top;
+
+    for (const btn of LEVEL_BUTTONS) {
+      if (
+        clickX >= btn.x && clickX <= btn.x + btn.width &&
+        clickY >= btn.y && clickY <= btn.y + btn.height
+      ) {
+        startLevel(btn.index);
+        break;
+      }
+    }
+    return;
+  }
+
+  if (state.status === 'gameover' || state.status === 'win') restart();
 });
 
 document.addEventListener('keyup', (e) => {
@@ -256,6 +311,12 @@ function update() {
 
 function draw() {
   ctx.clearRect(0, 0, W, H);
+
+  if (state.status === 'menu') {
+    drawLevelSelector();
+    return;
+  }
+
   drawSprite(ctx, 'paddle', paddle.x, paddle.y, paddle.width, paddle.height);
   drawSprite(ctx, 'ball', ball.x - ball.radius, ball.y - ball.radius, ball.radius * 2, ball.radius * 2);
 
@@ -282,23 +343,49 @@ function draw() {
   }
 }
 
-function restart() {
-  if (state.status === 'playing') return;
-
-  blocks = createBlocksFromPattern(LEVELS[0].pattern);
-
-  state.lives = 3;
+function startLevel(index) {
+  state.level = index + 1;
   state.score = 0;
+  state.lives = 3;
   state.status = 'playing';
-  state.level = 1;
-  state.transitionFramesLeft = 0;
+
+  blocks = createBlocksFromPattern(LEVELS[index].pattern);
 
   ball.x = W / 2;
   ball.y = H / 2;
-  ball.vx = LEVELS[0].speed.vx;
-  ball.vy = LEVELS[0].speed.vy;
+  ball.vx = LEVELS[index].speed.vx;
+  ball.vy = LEVELS[index].speed.vy;
 
   paddle.x = W / 2 - paddle.width / 2;
+}
+
+function restart() {
+  if (state.status === 'playing') return;
+
+  state.status = 'menu';
+  state.transitionFramesLeft = 0;
+}
+
+function drawLevelSelector() {
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, W, H);
+
+  ctx.textAlign = 'center';
+  ctx.font = 'bold 28px monospace';
+  ctx.fillStyle = '#fff';
+  ctx.fillText('Elegí un nivel', W / 2, LEVEL_BUTTONS_Y - 40);
+
+  for (const btn of LEVEL_BUTTONS) {
+    ctx.fillStyle = '#333';
+    ctx.fillRect(btn.x, btn.y, btn.width, btn.height);
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(btn.x, btn.y, btn.width, btn.height);
+
+    ctx.font = 'bold 40px monospace';
+    ctx.fillStyle = '#ffe066';
+    ctx.fillText(String(btn.index + 1), btn.x + btn.width / 2, btn.y + btn.height / 2 + 14);
+  }
 }
 
 function drawTransitionOverlay() {
