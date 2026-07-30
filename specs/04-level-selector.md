@@ -1,6 +1,6 @@
 # SPEC 04 — Selector de niveles
 
-> **Estado:** Approved · **Depende de:** 01-mvp-arkanoid, 02-sound-effects, 03-levels-system · **Fecha:** 2026-07-29
+> **Estado:** Implemented · **Depende de:** 01-mvp-arkanoid, 02-sound-effects, 03-levels-system · **Fecha:** 2026-07-29
 > **Objetivo:** Añadir una pantalla de selección de nivel al cargar la página (y al reiniciar con R) donde el usuario elige, haciendo click sobre un botón numerado, entre 5 niveles —los 3 existentes más 2 nuevos con patrones de bloques distintos—, arrancando siempre con `score = 0` y `lives = 3` desde el nivel elegido y continuando la progresión secuencial normal por los niveles restantes hasta el final.
 
 ---
@@ -97,17 +97,17 @@ Notas:
 
 ## Acceptance criteria
 
-- [ ] Al cargar la página, se muestra la pantalla de selección con 5 botones numerados "1" a "5" en vez de arrancar el juego directamente.
-- [ ] Al hacer click en el botón "1", el juego arranca en el nivel 1 con su patrón, filas y velocidad definidos, `score = 0` y `lives = 3`.
-- [ ] Al hacer click en cualquier otro botón (2, 3, 4 o 5), el juego arranca directamente en ese nivel con su propio patrón, filas y velocidad, `score = 0` y `lives = 3`.
-- [ ] Los niveles 4 y 5 tienen patrones de bloques visualmente distintos entre sí y respecto de los niveles 1-3 (reloj de arena y escalera diagonal), con más filas y bola más rápida que el nivel anterior.
-- [ ] Al completar el nivel elegido manualmente (por ejemplo, empezar en nivel 2), la partida continúa en secuencia por los niveles siguientes (3, 4, 5) igual que hoy, sin volver al selector entre niveles.
-- [ ] Al destruir todos los bloques del nivel 5 (el último), se muestra el overlay "¡GANASTE!" con el puntaje final.
-- [ ] Si las vidas llegan a 0 en cualquier nivel (1 a 5), se muestra el overlay de game over con el puntaje final, igual que antes.
-- [ ] Al presionar R o hacer click sobre el overlay de game over o victoria, el juego vuelve a la pantalla de selección de niveles (no directo a nivel 1).
-- [ ] Mientras está la pantalla de selección visible, el HUD (puntaje, nivel, vidas) no se dibuja.
-- [ ] Un click durante la transición entre niveles ("¡Nivel X!") no reinicia la partida ni la interrumpe.
-- [ ] Los 5 botones del selector son clickeables en toda su área (100x100px) y quedan centrados horizontalmente en el canvas.
+- [x] Al cargar la página, se muestra la pantalla de selección con 5 botones numerados "1" a "5" en vez de arrancar el juego directamente.
+- [x] Al hacer click en el botón "1", el juego arranca en el nivel 1 con su patrón, filas y velocidad definidos, `score = 0` y `lives = 3`.
+- [x] Al hacer click en cualquier otro botón (2, 3, 4 o 5), el juego arranca directamente en ese nivel con su propio patrón, filas y velocidad, `score = 0` y `lives = 3`.
+- [x] Los niveles 4 y 5 tienen patrones de bloques visualmente distintos entre sí y respecto de los niveles 1-3 (reloj de arena y escalera diagonal), con más filas y bola más rápida que el nivel anterior.
+- [x] Al completar el nivel elegido manualmente (por ejemplo, empezar en nivel 2), la partida continúa en secuencia por los niveles siguientes (3, 4, 5) igual que hoy, sin volver al selector entre niveles.
+- [x] Al destruir todos los bloques del nivel 5 (el último), se muestra el overlay "¡GANASTE!" con el puntaje final.
+- [x] Si las vidas llegan a 0 en cualquier nivel (1 a 5), se muestra el overlay de game over con el puntaje final, igual que antes.
+- [x] Al presionar R o hacer click sobre el overlay de game over o victoria, el juego vuelve a la pantalla de selección de niveles (no directo a nivel 1).
+- [x] Mientras está la pantalla de selección visible, el HUD (puntaje, nivel, vidas) no se dibuja.
+- [x] Un click durante la transición entre niveles ("¡Nivel X!") no reinicia la partida ni la interrumpe.
+- [x] Los 5 botones del selector son clickeables en toda su área (100x100px) y quedan centrados horizontalmente en el canvas.
 
 ---
 
