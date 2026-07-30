@@ -5,16 +5,50 @@ const W = canvas.width;
 const H = canvas.height;
 
 const BLOCK_COLS = 10;
-const BLOCK_ROWS = 6;
 const BLOCK_W = 72;
 const BLOCK_H = 22;
 const BLOCK_GAP = 4;
 const BLOCKS_OFFSET_X = (800 - (BLOCK_COLS * BLOCK_W + (BLOCK_COLS - 1) * BLOCK_GAP)) / 2;
 const BLOCKS_OFFSET_Y = 60;
-const BLOCK_COLORS = ['red', 'cyan', 'green', 'magenta', 'yellow', 'hotpink'];
 
 const BALL_RADIUS = 8;
-const BALL_SPEED = 2.5;
+
+const LEVELS = [
+  {
+    speed: { vx: 1.7, vy: -1.7 },
+    pattern: [
+      'RRRRRRRRRR',
+      'CCCCCCCCCC',
+      'GGGGGGGGGG',
+      'MMMMMMMMMM',
+    ],
+  },
+  {
+    speed: { vx: 2.0, vy: -2.0 },
+    pattern: [
+      'RR..RR..RR',
+      '.CCCCCCCC.',
+      'GGG....GGG',
+      'YYYYYYYYYY',
+      'HHHH..HHHH',
+    ],
+  },
+  {
+    speed: { vx: 3.0, vy: -3.0 },
+    pattern: [
+      '.RRRRRRRR.',
+      'RR.CCCC.RR',
+      'C.GGGGGG.C',
+      'GYYYYYYYYG',
+      'YMMMMMMMMY',
+      'MHHHHHHHHM',
+      'HAAAAAAAAH',
+      'AAAAAAAAAA',
+    ],
+  },
+];
+
+const COLOR_MAP = { R: 'red', C: 'cyan', G: 'green', M: 'magenta', Y: 'yellow', H: 'hotpink', A: 'gray' };
 
 const PADDLE_W = 100;
 const PADDLE_H = 14;
@@ -29,16 +63,18 @@ const paddle = {
   speed: PADDLE_SPEED,
 };
 
-function createBlocks() {
+function createBlocksFromPattern(pattern) {
   const blocks = [];
-  for (let row = 0; row < BLOCK_ROWS; row++) {
+  for (let row = 0; row < pattern.length; row++) {
     for (let col = 0; col < BLOCK_COLS; col++) {
+      const char = pattern[row][col];
+      if (char === '.') continue;
       blocks.push({
         x: BLOCKS_OFFSET_X + col * (BLOCK_W + BLOCK_GAP),
         y: BLOCKS_OFFSET_Y + row * (BLOCK_H + BLOCK_GAP),
         width: BLOCK_W,
         height: BLOCK_H,
-        color: BLOCK_COLORS[row],
+        color: COLOR_MAP[char],
         alive: true,
       });
     }
@@ -46,19 +82,21 @@ function createBlocks() {
   return blocks;
 }
 
-let blocks = createBlocks();
+let blocks = createBlocksFromPattern(LEVELS[0].pattern);
 
 const state = {
   lives: 3,
   score: 0,
   status: 'playing',
+  level: 1,
+  transitionFramesLeft: 0,
 };
 
 const ball = {
   x: W / 2,
   y: H / 2,
-  vx: BALL_SPEED,
-  vy: -BALL_SPEED,
+  vx: LEVELS[state.level - 1].speed.vx,
+  vy: LEVELS[state.level - 1].speed.vy,
   radius: BALL_RADIUS,
 };
 
@@ -95,6 +133,24 @@ document.addEventListener('keyup', (e) => {
 });
 
 function update() {
+  if (state.status === 'transition') {
+    state.transitionFramesLeft -= 1;
+    if (state.transitionFramesLeft <= 0) {
+      state.level += 1;
+      blocks = createBlocksFromPattern(LEVELS[state.level - 1].pattern);
+
+      ball.x = W / 2;
+      ball.y = H / 2;
+      ball.vx = LEVELS[state.level - 1].speed.vx;
+      ball.vy = LEVELS[state.level - 1].speed.vy;
+
+      paddle.x = W / 2 - paddle.width / 2;
+
+      state.status = 'playing';
+    }
+    return;
+  }
+
   if (state.status !== 'playing') return;
 
   if (keys.left)  paddle.x -= paddle.speed;
@@ -109,8 +165,8 @@ function update() {
     state.lives -= 1;
     ball.x = W / 2;
     ball.y = H / 2;
-    ball.vx = BALL_SPEED;
-    ball.vy = -BALL_SPEED;
+    ball.vx = LEVELS[state.level - 1].speed.vx;
+    ball.vy = LEVELS[state.level - 1].speed.vy;
   }
 
   // paredes laterales
@@ -175,7 +231,12 @@ function update() {
     return;
   }
   if (blocks.every(b => !b.alive)) {
-    state.status = 'win';
+    if (state.level < LEVELS.length) {
+      state.status = 'transition';
+      state.transitionFramesLeft = 90;
+    } else {
+      state.status = 'win';
+    }
     return;
   }
 
@@ -202,7 +263,9 @@ function draw() {
     if (b.alive) drawSprite(ctx, 'block_' + b.color, b.x, b.y, b.width, b.height);
   }
 
-  if (state.status !== 'playing') {
+  if (state.status === 'transition') {
+    drawTransitionOverlay();
+  } else if (state.status !== 'playing') {
     drawOverlay();
   }
 
@@ -210,6 +273,7 @@ function draw() {
   ctx.fillStyle = '#fff';
   ctx.textAlign = 'left';
   ctx.fillText('Puntos: ' + state.score, 16, 28);
+  ctx.fillText('Nivel ' + state.level, 16, 52);
   const ballSize = 18;
   const ballSpacing = 4;
   for (let i = 0; i < state.lives; i++) {
@@ -221,18 +285,30 @@ function draw() {
 function restart() {
   if (state.status === 'playing') return;
 
-  blocks = createBlocks();
+  blocks = createBlocksFromPattern(LEVELS[0].pattern);
 
   state.lives = 3;
   state.score = 0;
   state.status = 'playing';
+  state.level = 1;
+  state.transitionFramesLeft = 0;
 
   ball.x = W / 2;
   ball.y = H / 2;
-  ball.vx = BALL_SPEED;
-  ball.vy = -BALL_SPEED;
+  ball.vx = LEVELS[0].speed.vx;
+  ball.vy = LEVELS[0].speed.vy;
 
   paddle.x = W / 2 - paddle.width / 2;
+}
+
+function drawTransitionOverlay() {
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
+  ctx.fillRect(0, 0, W, H);
+
+  ctx.textAlign = 'center';
+  ctx.font = 'bold 48px monospace';
+  ctx.fillStyle = '#ffe066';
+  ctx.fillText('¡Nivel ' + (state.level + 1) + '!', W / 2, H / 2);
 }
 
 function drawOverlay() {
