@@ -6,9 +6,22 @@ Este archivo proporciona orientación a Claude Code (claude.ai/code) cuando trab
 
 Un juego de Arkanoid (estilo Breakout) construido con HTML, CSS y JavaScript puro. Sin dependencias y sin paso de compilación — abrir `index.html` directamente en el navegador.
 
+Toda la lógica del juego vive en `game.js` (un único archivo, sin módulos): estado global (`state`), definición de niveles (`LEVELS`), física de la pelota/paleta/bloques, input de teclado y mouse, y las funciones de dibujo (`draw`, `drawLevelSelector`, `drawOverlay`, etc.), todo corriendo dentro de un loop con `requestAnimationFrame`.
+
 ## Ejecutar el juego
 
 Abrir `index.html` en cualquier navegador moderno. No se requiere servidor, bundler ni instalación.
+
+## Estado y flujo del juego
+
+`state.status` controla la máquina de estados del juego: `'menu' → 'playing' → 'transition' → 'playing' → ... → 'win' | 'gameover' → 'menu'`.
+
+- **`menu`** — pantalla inicial (y de reinicio) con botones numerados para elegir cualquiera de los 5 niveles (`LEVEL_BUTTONS`, calculados a partir de `LEVELS.length`)
+- **`playing`** — partida en curso en `state.level`
+- **`transition`** — aviso breve ("¡Nivel X!") entre niveles al destruir todos los bloques, antes de continuar con el siguiente
+- **`win`** / **`gameover`** — overlay de fin de partida; tecla `R` o click vuelven a `menu` (no directo a nivel 1)
+
+`startLevel(index)` arranca siempre con `score = 0` y `lives = 3` en el nivel elegido, y la progresión automática entre niveles sigue en secuencia hasta completar el nivel 5.
 
 ## Assets
 
