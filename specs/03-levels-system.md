@@ -1,6 +1,6 @@
 # SPEC 03 — Sistema de niveles
 
-> **Estado:** Approved · **Depende de:** 01-mvp-arkanoid, 02-sound-effects · **Fecha:** 2026-07-29
+> **Estado:** Implemented · **Depende de:** 01-mvp-arkanoid, 02-sound-effects · **Fecha:** 2026-07-29
 > **Objetivo:** Añadir un sistema de 3 niveles al Arkanoid, donde al destruir todos los bloques se muestra una transición breve y se pasa al siguiente nivel manteniendo puntuación y vidas —variando patrón de bloques, número de filas y velocidad de la bola por nivel—, mostrando la pantalla de "¡GANASTE!" solo al completar el último nivel.
 
 ---
@@ -100,17 +100,17 @@ Notas:
 
 ## Acceptance criteria
 
-- [ ] El nivel 1 arranca con el patrón, número de filas y velocidad de bola definidos en `LEVELS[0]`.
-- [ ] Al destruir todos los bloques del nivel 1, aparece un overlay "¡Nivel 2!" (sin necesidad de presionar nada).
-- [ ] Tras ~1.5s, el overlay de transición desaparece automáticamente y arranca el nivel 2 con su propio patrón, filas y velocidad de bola.
-- [ ] Al pasar del nivel 1 al nivel 2, `score` y `lives` mantienen su valor (no se resetean).
-- [ ] Al pasar de nivel, la bola y la paleta vuelven a su posición inicial, y la bola se mueve con la velocidad del nuevo nivel.
-- [ ] El mismo comportamiento de transición se repite al completar el nivel 2 (pasa a nivel 3 con su patrón/filas/velocidad propios).
-- [ ] Al destruir todos los bloques del nivel 3 (el último), se muestra el overlay de "¡GANASTE!" con el puntaje final, no una transición.
-- [ ] Si las vidas llegan a 0 en cualquier nivel (1, 2 o 3), se muestra el overlay de game over con el puntaje final, igual que en el MVP.
-- [ ] El HUD muestra "Nivel X" junto al puntaje y las vidas durante el juego (`playing` y `transition`).
-- [ ] Al reiniciar (tecla R o botón) desde el overlay de victoria o game over, el juego vuelve siempre al nivel 1, con `score = 0` y `lives = 3`.
-- [ ] Ningún bloque queda huérfano fuera de la cuadrícula ni se rompe el layout visual en niveles con huecos (`.`) en el patrón.
+- [x] El nivel 1 arranca con el patrón, número de filas y velocidad de bola definidos en `LEVELS[0]`.
+- [x] Al destruir todos los bloques del nivel 1, aparece un overlay "¡Nivel 2!" (sin necesidad de presionar nada).
+- [x] Tras ~1.5s, el overlay de transición desaparece automáticamente y arranca el nivel 2 con su propio patrón, filas y velocidad de bola.
+- [x] Al pasar del nivel 1 al nivel 2, `score` y `lives` mantienen su valor (no se resetean).
+- [x] Al pasar de nivel, la bola y la paleta vuelven a su posición inicial, y la bola se mueve con la velocidad del nuevo nivel.
+- [x] El mismo comportamiento de transición se repite al completar el nivel 2 (pasa a nivel 3 con su patrón/filas/velocidad propios).
+- [x] Al destruir todos los bloques del nivel 3 (el último), se muestra el overlay de "¡GANASTE!" con el puntaje final, no una transición.
+- [x] Si las vidas llegan a 0 en cualquier nivel (1, 2 o 3), se muestra el overlay de game over con el puntaje final, igual que en el MVP.
+- [x] El HUD muestra "Nivel X" junto al puntaje y las vidas durante el juego (`playing` y `transition`).
+- [x] Al reiniciar (tecla R o botón) desde el overlay de victoria o game over, el juego vuelve siempre al nivel 1, con `score = 0` y `lives = 3`.
+- [x] Ningún bloque queda huérfano fuera de la cuadrícula ni se rompe el layout visual en niveles con huecos (`.`) en el patrón.
 
 ---
 
